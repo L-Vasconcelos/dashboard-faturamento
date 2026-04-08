@@ -205,6 +205,26 @@
     .phase-item-num{font-size:20px;font-weight:800;color:var(--green)}
     .phase-item-label{font-size:11px;color:var(--text2);margin-top:3px}
 
+    /* ─── PLAN SELECTOR ─────────────────────── */
+    .plan-selector{display:flex;gap:0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:18px}
+    .plan-btn{flex:1;background:none;border:none;border-radius:9px;padding:10px 14px;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:2px}
+    .plan-btn .pb-label{font-size:13px;font-weight:700;color:var(--text2);transition:color .22s}
+    .plan-btn .pb-kcal{font-size:11px;color:var(--text3);font-weight:500;transition:color .22s}
+    .plan-btn .pb-tag{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:8px;padding:2px 7px;margin-top:2px;opacity:0;transition:opacity .22s}
+    .plan-btn.active{background:var(--card2)}
+    .plan-btn.active .pb-label{color:var(--text)}
+    .plan-btn.active .pb-tag{opacity:1}
+    .plan-btn.active.pa .pb-label{color:var(--green)}
+    .plan-btn.active.pa .pb-tag{background:rgba(0,212,170,.15);color:var(--green)}
+    .plan-btn.active.pb-b .pb-label{color:var(--orange)}
+    .plan-btn.active.pb-b .pb-tag{background:rgba(255,107,53,.15);color:var(--orange)}
+    .plan-divider{width:1px;background:var(--border);margin:6px 0;flex-shrink:0}
+    .plan-content{display:none}.plan-content.active{display:block}
+    .plan-b-alert{background:rgba(255,107,53,.07);border:1px solid rgba(255,107,53,.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+    .plan-b-alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+    .plan-b-alert-text{font-size:12px;color:var(--text2);line-height:1.5}
+    .plan-b-alert-text strong{color:var(--orange)}
+
     /* ─── BOTTOM NAV — oculto no desktop ────── */
     .bottom-nav{display:none}
 
@@ -493,157 +513,157 @@
   <!-- ────── TAB: ALIMENTAR ────── -->
   <div id="tab-alimentar" class="tab-pane">
 
-    <div class="daily-macros">
-      <div class="dm dp">
-        <div class="dm-label">Proteína</div>
-        <div class="dm-val">218g</div>
-        <div class="bar"><div class="bar-fill bp"></div></div>
-      </div>
-      <div class="dm dc">
-        <div class="dm-label">Carboidrato</div>
-        <div class="dm-val">264g</div>
-        <div class="bar"><div class="bar-fill bc"></div></div>
-      </div>
-      <div class="dm dg">
-        <div class="dm-label">Gordura</div>
-        <div class="dm-val">65g</div>
-        <div class="bar"><div class="bar-fill bg"></div></div>
-      </div>
-      <div class="dm dk">
-        <div class="dm-label">Calorias</div>
-        <div class="dm-val">2.510</div>
-        <div class="bar"><div class="bar-fill bk"></div></div>
-      </div>
+    <!-- Seletor de Plano -->
+    <div class="plan-selector">
+      <button class="plan-btn pa active" id="btn-pa" onclick="selectPlan('A',this)">
+        <span class="pb-label">Plano A</span>
+        <span class="pb-kcal">2.510 kcal · 5 refeições</span>
+        <span class="pb-tag">Déficit moderado</span>
+      </button>
+      <div class="plan-divider"></div>
+      <button class="plan-btn pb-b" id="btn-pb" onclick="selectPlan('B',this)">
+        <span class="pb-label">Plano B</span>
+        <span class="pb-kcal">1.820 kcal · 4 refeições</span>
+        <span class="pb-tag">Déficit agressivo</span>
+      </button>
     </div>
 
-    <div class="tl">
-
-      <!-- 07:00 -->
-      <div class="tl-row">
-        <div class="tl-time">07h00</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--yellow)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card">
+    <!-- ══ PLANO A ══ -->
+    <div id="plan-a-content" class="plan-content active">
+      <div class="daily-macros">
+        <div class="dm dp"><div class="dm-label">Proteína</div><div class="dm-val">218g</div><div class="bar"><div class="bar-fill bp"></div></div></div>
+        <div class="dm dc"><div class="dm-label">Carboidrato</div><div class="dm-val">264g</div><div class="bar"><div class="bar-fill bc"></div></div></div>
+        <div class="dm dg"><div class="dm-label">Gordura</div><div class="dm-val">65g</div><div class="bar"><div class="bar-fill bg"></div></div></div>
+        <div class="dm dk"><div class="dm-label">Calorias</div><div class="dm-val">2.510</div><div class="bar"><div class="bar-fill bk"></div></div></div>
+      </div>
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-time">07h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--yellow)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
             <div class="meal-title">☀️ Café da manhã</div>
             <div class="meal-foods">3 ovos mexidos · 70g aveia com leite desnatado · 1 banana · café preto sem açúcar</div>
             <div class="meal-note">Inicia o anabolismo matinal — proteína + carboidrato de liberação mista</div>
-            <div class="meal-macro-row">
-              <span class="mb mp">P: 30g</span>
-              <span class="mb mc">C: 72g</span>
-              <span class="mb mg">G: 16g</span>
-              <span class="kcal-txt">540 kcal</span>
-            </div>
-          </div>
+            <div class="meal-macro-row"><span class="mb mp">P: 30g</span><span class="mb mc">C: 72g</span><span class="mb mg">G: 16g</span><span class="kcal-txt">540 kcal</span></div>
+          </div></div>
         </div>
-      </div>
-
-      <!-- 10:30 -->
-      <div class="tl-row">
-        <div class="tl-time">10h30</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--green)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card">
+        <div class="tl-row">
+          <div class="tl-time">10h30</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
             <div class="meal-title">🏃 Pré-treino — 1h30 antes</div>
             <div class="meal-foods">140g frango grelhado · 150g batata doce · 1 maçã média</div>
             <div class="meal-note">Digestão completa antes das 12h — energia sustentada sem refluxo</div>
-            <div class="meal-macro-row">
-              <span class="mb mp">P: 44g</span>
-              <span class="mb mc">C: 60g</span>
-              <span class="mb mg">G: 4g</span>
-              <span class="kcal-txt">460 kcal</span>
-            </div>
-          </div>
+            <div class="meal-macro-row"><span class="mb mp">P: 44g</span><span class="mb mc">C: 60g</span><span class="mb mg">G: 4g</span><span class="kcal-txt">460 kcal</span></div>
+          </div></div>
         </div>
-      </div>
-
-      <!-- TREINO -->
-      <div class="tl-row">
-        <div class="tl-time">12h00</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--green)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card training">
+        <div class="tl-row">
+          <div class="tl-time">12h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card training">
             <div class="meal-title" style="color:var(--green)">⚡ Treino — 12h às 13h</div>
             <div class="training-txt">Musculação (25-30 min) → Cardio (25-30 min) · Beba 600-800ml de água durante</div>
-          </div>
+          </div></div>
         </div>
-      </div>
-
-      <!-- 13:15 -->
-      <div class="tl-row">
-        <div class="tl-time">13h15</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--green)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card">
+        <div class="tl-row">
+          <div class="tl-time">13h15</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
             <div class="meal-title">🍽️ Almoço pós-treino — até 60 min após</div>
             <div class="meal-foods">180g frango grelhado · 160g arroz integral · 80g feijão · salada livre · 10ml azeite</div>
             <div class="meal-note">Janela anabólica: carboidrato + proteína para síntese proteica e reposição de glicogênio</div>
-            <div class="meal-macro-row">
-              <span class="mb mp">P: 58g</span>
-              <span class="mb mc">C: 72g</span>
-              <span class="mb mg">G: 14g</span>
-              <span class="kcal-txt">640 kcal</span>
-            </div>
-          </div>
+            <div class="meal-macro-row"><span class="mb mp">P: 58g</span><span class="mb mc">C: 72g</span><span class="mb mg">G: 14g</span><span class="kcal-txt">640 kcal</span></div>
+          </div></div>
         </div>
-      </div>
-
-      <!-- 16:30 -->
-      <div class="tl-row">
-        <div class="tl-time">16h30</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--orange)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card">
+        <div class="tl-row">
+          <div class="tl-time">16h30</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--orange)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
             <div class="meal-title">🥛 Lanche da tarde</div>
             <div class="meal-foods">200g iogurte grego integral · 30g whey isolado · 100g morango · 15g granola low sugar</div>
             <div class="meal-note">Proteína contínua + saciedade — previne catabolismo entre almoço e jantar</div>
-            <div class="meal-macro-row">
-              <span class="mb mp">P: 48g</span>
-              <span class="mb mc">C: 32g</span>
-              <span class="mb mg">G: 9g</span>
-              <span class="kcal-txt">400 kcal</span>
-            </div>
-          </div>
+            <div class="meal-macro-row"><span class="mb mp">P: 48g</span><span class="mb mc">C: 32g</span><span class="mb mg">G: 9g</span><span class="kcal-txt">400 kcal</span></div>
+          </div></div>
         </div>
-      </div>
-
-      <!-- 20:00 -->
-      <div class="tl-row">
-        <div class="tl-time">20h00</div>
-        <div class="tl-conn">
-          <div class="tl-dot" style="background:var(--blue)"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div>
-          <div class="tl-card">
+        <div class="tl-row">
+          <div class="tl-time">20h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
             <div class="meal-title">🐟 Jantar</div>
             <div class="meal-foods">160g salmão grelhado · 100g batata doce · brócolis + espinafre refogado no azeite</div>
             <div class="meal-note">Omega-3 anti-inflamatório + proteína de lenta absorção para recuperação noturna</div>
-            <div class="meal-macro-row">
-              <span class="mb mp">P: 38g</span>
-              <span class="mb mc">C: 28g</span>
-              <span class="mb mg">G: 22g</span>
-              <span class="kcal-txt">470 kcal</span>
-            </div>
-          </div>
+            <div class="meal-macro-row"><span class="mb mp">P: 38g</span><span class="mb mc">C: 28g</span><span class="mb mg">G: 22g</span><span class="kcal-txt">470 kcal</span></div>
+          </div></div>
         </div>
       </div>
+    </div><!-- /plan-a -->
 
-    </div><!-- /tl -->
+    <!-- ══ PLANO B ══ -->
+    <div id="plan-b-content" class="plan-content">
+      <div class="plan-b-alert">
+        <span class="plan-b-alert-icon">⚡</span>
+        <div class="plan-b-alert-text">
+          <strong>Déficit agressivo — use com critério.</strong> Adaptado para queima de 1.200-1.300 kcal/dia. Proteína muito alta (182g) para proteger massa muscular. Use no máximo <strong>3-4 semanas seguidas</strong> e depois retorne ao Plano A por 1-2 semanas para resetar hormônios (leptina/grelina).
+        </div>
+      </div>
+      <div class="daily-macros">
+        <div class="dm dp"><div class="dm-label">Proteína</div><div class="dm-val">182g</div><div class="bar"><div class="bar-fill bp" style="width:65%"></div></div></div>
+        <div class="dm dc"><div class="dm-label">Carboidrato</div><div class="dm-val">148g</div><div class="bar"><div class="bar-fill bc" style="width:30%"></div></div></div>
+        <div class="dm dg"><div class="dm-label">Gordura</div><div class="dm-val">51g</div><div class="bar"><div class="bar-fill bg" style="width:22%"></div></div></div>
+        <div class="dm dk"><div class="dm-label">Calorias</div><div class="dm-val">1.820</div><div class="bar"><div class="bar-fill bk" style="background:var(--orange);width:72%"></div></div></div>
+      </div>
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-time">07h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--yellow)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
+            <div class="meal-title">☀️ Café da manhã</div>
+            <div class="meal-foods">4 claras + 1 ovo inteiro mexido · 50g aveia no leite desnatado · 1 banana pequena · café preto</div>
+            <div class="meal-note">Proteína alta de manhã reduz fome durante o dia — aveia sustenta até o pré-treino</div>
+            <div class="meal-macro-row"><span class="mb mp">P: 29g</span><span class="mb mc">C: 54g</span><span class="mb mg">G: 8g</span><span class="kcal-txt">420 kcal</span></div>
+          </div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">10h30</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
+            <div class="meal-title">🏃 Pré-treino — 1h30 antes</div>
+            <div class="meal-foods">160g frango grelhado · 120g batata doce · 100g cottage · pepino + tomate à vontade</div>
+            <div class="meal-note">Carboidrato moderado pré-treino — suficiente para performance sem exagero calórico</div>
+            <div class="meal-macro-row"><span class="mb mp">P: 49g</span><span class="mb mc">C: 34g</span><span class="mb mg">G: 9g</span><span class="kcal-txt">405 kcal</span></div>
+          </div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">12h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card training">
+            <div class="meal-title" style="color:var(--green)">⚡ Treino — 12h às 13h</div>
+            <div class="training-txt">Musculação (25-30 min) → Cardio (25-30 min) · Atenção: déficit alto = priorize intensidade moderada no cardio</div>
+          </div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">13h15</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
+            <div class="meal-title">🍽️ Almoço pós-treino — até 60 min após</div>
+            <div class="meal-foods">200g frango grelhado · 130g arroz integral · 80g feijão · salada livre · 8ml azeite</div>
+            <div class="meal-note">Maior refeição do dia — concentra carboidratos no momento de maior sensibilidade à insulina</div>
+            <div class="meal-macro-row"><span class="mb mp">P: 57g</span><span class="mb mc">C: 45g</span><span class="mb mg">G: 13g</span><span class="kcal-txt">565 kcal</span></div>
+          </div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">20h00</div>
+          <div class="tl-conn"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+          <div><div class="tl-card">
+            <div class="meal-title">🐟 Jantar — proteína + gordura boa</div>
+            <div class="meal-foods">180g tilápia ou atum grelhado · 2 ovos cozidos · brócolis + abobrinha refogada · 8ml azeite</div>
+            <div class="meal-note">Zero carboidrato à noite no Plano B — proteína + gordura boa favorece lipólise durante o sono</div>
+            <div class="meal-macro-row"><span class="mb mp">P: 47g</span><span class="mb mc">C: 10g</span><span class="mb mg">G: 21g</span><span class="kcal-txt">430 kcal</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div><!-- /plan-b -->
+
   </div>
 
   <!-- ────── TAB: PROTOCOLO ────── -->
@@ -765,6 +785,14 @@
 </nav>
 
 <script>
+// ═══════ PLAN SELECTOR ═══════
+function selectPlan(plan, btn) {
+  document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.plan-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('plan-' + plan.toLowerCase() + '-content').classList.add('active');
+}
+
 // ═══════ CARDIO STATE ═══════
 const selCardio = {0:0,1:0,2:0,3:0,4:0,5:0};
 
