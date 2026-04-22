@@ -398,6 +398,56 @@ td.td-num { font-family: 'Fira Code', monospace; font-size: 12px; }
 .loading-text { font-size: 14px; color: var(--text-dim); }
 .loading-sub  { font-size: 12px; color: var(--text-muted); }
 
+/* ─── SECTION HIGHLIGHT ──────────────────────────────────────── */
+.section-highlight {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+  animation: flashBorder 1.2s ease-out forwards;
+}
+@keyframes flashBorder {
+  0%   { outline-color: var(--red-hover); }
+  60%  { outline-color: var(--red); }
+  100% { outline-color: transparent; }
+}
+
+/* ─── PERF STRIP ──────────────────────────────────────────────── */
+.perf-strip {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.perf-section { flex: 1; min-width: 0; }
+.perf-section + .perf-section { padding-left: 14px; border-left: 1px solid var(--border); }
+.perf-section-title {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.perf-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.perf-metrics-row { display: flex; gap: 8px; }
+.perf-ind {
+  flex: 1; background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 9px 10px; min-width: 0;
+  transition: border-color 150ms;
+}
+.perf-ind:hover { border-color: var(--border2); }
+.perf-ind-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.perf-ind-value {
+  font-family: 'Fira Code', monospace; font-size: 17px;
+  font-weight: 700; letter-spacing: -0.5px; line-height: 1; margin-bottom: 5px;
+}
+.perf-gauge { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
+.perf-gauge-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.perf-ind-sub { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* ─── TOAST ─────────────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 24px; right: 24px; z-index: 9999;
@@ -431,31 +481,31 @@ td.td-num { font-family: 'Fira Code', monospace; font-size: 12px; }
 
   <div class="sidebar-section">
     <div class="sidebar-label">Menu</div>
-    <div class="nav-item active">
+    <div class="nav-item active" onclick="setView('relatorios', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Relatórios
     </div>
-    <div class="nav-item">
+    <div class="nav-item" onclick="setView('vendedores', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Vendedores
     </div>
-    <div class="nav-item">
+    <div class="nav-item" onclick="setView('produtos', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       Produtos
     </div>
-    <div class="nav-item">
+    <div class="nav-item" onclick="setView('mercados', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       Mercados
     </div>
-    <div class="nav-item">
+    <div class="nav-item" onclick="setView('indicadores', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-      Campanhas
+      Indicadores
     </div>
   </div>
 
   <div class="sidebar-section" style="margin-top:8px">
     <div class="sidebar-label">Sistema</div>
-    <div class="nav-item">
+    <div class="nav-item" onclick="setView('config', this)">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12H4M20 12h2"/></svg>
       Configurações
     </div>
@@ -626,6 +676,7 @@ td.td-num { font-family: 'Fira Code', monospace; font-size: 12px; }
           <div class="legend-gradient"></div>
           <span class="legend-label">Maior</span>
         </div>
+        <div class="perf-strip" id="perf-strip"></div>
       </div>
 
       <!-- RIGHT PANEL -->
@@ -734,6 +785,7 @@ const DATA = {
   monthly: { jan: 42129428, fev: 36086466, mar: 18352697 },
   monthlyNfs: { jan: 151, fev: 172, mar: 73 },
   monthlyCli: { jan: 84, fev: 73, mar: 52 },
+  monthlyPeso: { jan: 5260, fev: 4510, mar: 2295 },
   meta: 120000000,
 
   mercadoMes: {
@@ -821,14 +873,15 @@ function getFilteredRecords() {
 function recompute() {
   if (!allRecords.length) return;
   const agg = computeAggregations(getFilteredRecords());
-  DATA.monthly    = agg.monthly;
-  DATA.monthlyNfs = agg.monthlyNfs;
-  DATA.monthlyCli = agg.monthlyCli;
-  DATA.mercadoMes = agg.mercadoMes;
-  DATA.gruposMes  = agg.gruposMes;
-  DATA.vendedores = agg.vendedores;
-  DATA.heatmap    = agg.heatmap;
-  DATA.paises     = agg.paises;
+  DATA.monthly     = agg.monthly;
+  DATA.monthlyNfs  = agg.monthlyNfs;
+  DATA.monthlyCli  = agg.monthlyCli;
+  DATA.monthlyPeso = agg.monthlyPeso;
+  DATA.mercadoMes  = agg.mercadoMes;
+  DATA.gruposMes   = agg.gruposMes;
+  DATA.vendedores  = agg.vendedores;
+  DATA.heatmap     = agg.heatmap;
+  DATA.paises      = agg.paises;
 
   // Atualiza meses e anos disponíveis para o subconjunto filtrado
   if (agg.availMonths && agg.availMonths.length > 0) {
@@ -929,6 +982,29 @@ function fmtFull(v) {
   return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+// ─── FONTE ÚNICA DE TOTAIS (todos os filtros) ─────────────────
+function computeFilteredTotals() {
+  const ms    = activeMonths();
+  const ratio = getMercadoRatio();
+  if (state.vendedor === 'all' && state.grupo === 'all') {
+    return {
+      fat:  ms.reduce((s,m) => s + (DATA.monthly[m]      || 0), 0) * ratio,
+      nfs:  Math.round(ms.reduce((s,m) => s + (DATA.monthlyNfs[m]  || 0), 0) * ratio),
+      cli:  Math.round(ms.reduce((s,m) => s + (DATA.monthlyCli[m]  || 0), 0) * ratio),
+      peso: ms.reduce((s,m) => s + (DATA.monthlyPeso?.[m] || 0), 0) * ratio,
+      venShare: 1
+    };
+  }
+  let vens = DATA.vendedores;
+  if (state.grupo    !== 'all') vens = vens.filter(v => v.grupos.includes(state.grupo));
+  if (state.vendedor !== 'all') vens = vens.filter(v => v.name === state.vendedor);
+  const fat = vens.reduce((s,v) => s + ms.reduce((ss,m) => ss + (v.fat[m] || 0), 0), 0) * ratio;
+  const nfs = Math.round(vens.reduce((s,v) => s + ms.reduce((ss,m) => ss + (v.nfs[m] || 0), 0), 0) * ratio);
+  const cli = Math.round(vens.reduce((s,v) => s + ms.reduce((ss,m) => ss + (v.cli[m] || 0), 0), 0) * ratio);
+  const totalGeral = ms.reduce((s,m) => s + (DATA.monthly[m] || 0), 0) * ratio;
+  return { fat, nfs, cli, peso: 0, venShare: totalGeral > 0 ? fat / totalGeral : 0 };
+}
+
 // ─── SPARKLINES ───────────────────────────────────────────────
 function drawSparkline(id, data, color) {
   const canvas = document.getElementById(id);
@@ -957,13 +1033,8 @@ function drawSparkline(id, data, color) {
 
 // ─── KPI UPDATE ───────────────────────────────────────────────
 function updateKPIs() {
-  const ms = activeMonths();
-  const ratio = getMercadoRatio();
-  const fat = ms.reduce((s,m) => s + (DATA.monthly[m] || 0), 0) * ratio;
-  const nfs = Math.round(ms.reduce((s,m) => s + (DATA.monthlyNfs[m] || 0), 0) * ratio);
-  const cli = Math.round(ms.reduce((s,m) => s + (DATA.monthlyCli[m] || 0), 0) * ratio);
+  const { fat, nfs, cli } = computeFilteredTotals();
   const ticket = nfs > 0 ? fat / nfs : 0;
-
   document.getElementById('kpi-fat').textContent    = fmtShort(fat);
   document.getElementById('kpi-nfs').textContent    = nfs.toLocaleString('pt-BR');
   document.getElementById('kpi-cli').textContent    = cli.toLocaleString('pt-BR');
@@ -1033,11 +1104,17 @@ function showTT(e) {
 function moveTT(e) { ttEl.style.left = (e.clientX+12)+'px'; ttEl.style.top = (e.clientY-44)+'px'; }
 function hideTT()  { ttEl.style.display = 'none'; }
 
-// ─── GRUPO BARS (responde a filtro de período e mercado) ──────────────
+// ─── GRUPO BARS (responde a todos os filtros) ─────────────────
 function buildGrupos() {
   const ms = activeMonths();
   const ratio = getMercadoRatio();
-  const computed = DATA.gruposMes.map(g => ({
+  let grupos = DATA.gruposMes;
+  if (state.vendedor !== 'all') {
+    const ven = DATA.vendedores.find(v => v.name === state.vendedor);
+    if (ven) grupos = grupos.filter(g => ven.grupos.includes(g.name));
+  }
+  if (state.grupo !== 'all') grupos = grupos.filter(g => g.name === state.grupo);
+  const computed = grupos.map(g => ({
     name: g.name,
     color: g.color,
     value: ms.reduce((s,m) => s + (g[m] || 0), 0) * ratio
@@ -1140,8 +1217,9 @@ let donut = null;
 function buildDonut() {
   const ms = activeMonths();
   const m  = DATA.mercadoMes;
-  const ext = ms.reduce((s,k) => s + m.exterior[k], 0);
-  const int = ms.reduce((s,k) => s + m.interno[k],  0);
+  const { venShare } = computeFilteredTotals();
+  const ext = ms.reduce((s,k) => s + m.exterior[k], 0) * venShare;
+  const int = ms.reduce((s,k) => s + m.interno[k],  0) * venShare;
 
   const ctx = document.getElementById('chart-donut').getContext('2d');
   if (donut) donut.destroy();
@@ -1180,15 +1258,111 @@ function buildDonut() {
 
 // ─── META BAR ─────────────────────────────────────────────────
 function updateMeta() {
-  const ratio = getMercadoRatio();
-  const ytd = activeMonths().reduce((s,m) => s + (DATA.monthly[m] || 0), 0) * ratio;
-  const pct = (ytd / DATA.meta * 100).toFixed(1);
+  const { fat } = computeFilteredTotals();
+  const pct = (fat / DATA.meta * 100).toFixed(1);
   document.getElementById('meta-fill').style.width = Math.min(+pct, 100) + '%';
   const lab = state.period === 'all' ? 'Faturamento YTD ' + new Date().getFullYear()
     : 'Faturamento ' + (MONTH_LABELS[MONTHS.indexOf(state.period)] || state.period.toUpperCase());
   document.getElementById('meta-label').textContent = lab;
-  document.getElementById('meta-val').innerHTML = `R$ <b>${fmtShort(ytd)}</b> / R$ 120M meta`;
+  document.getElementById('meta-val').innerHTML = `R$ <b>${fmtShort(fat)}</b> / R$ ${fmtShort(DATA.meta)} meta`;
   document.getElementById('meta-pct').textContent = `(${pct.replace('.',',')}%)`;
+}
+
+// ─── PERF INDICATORS ──────────────────────────────────────────
+function buildPerfIndicators() {
+  const strip = document.getElementById('perf-strip');
+  if (!strip) return;
+  const ms                       = activeMonths();
+  const { fat, nfs, cli, peso }  = computeFilteredTotals();
+  const metaPct = DATA.meta > 0 ? fat / DATA.meta * 100 : 0;
+  const fatCli  = cli > 0 ? fat / cli : 0;
+  const nfDia   = ms.length > 0 ? nfs / (ms.length * 22) : 0;
+  const nfCli   = cli > 0 ? nfs / cli : 0;
+  let momPct = null;
+  if (ms.length >= 2) {
+    const last = DATA.monthly[ms[ms.length-1]] || 0;
+    const prev = DATA.monthly[ms[ms.length-2]] || 0;
+    if (prev > 0) momPct = (last - prev) / prev * 100;
+  }
+  const momStr   = momPct !== null ? (momPct >= 0 ? '+' : '') + momPct.toFixed(1).replace('.',',') + '%' : '—';
+  const momColor = momPct === null ? 'var(--text-dim)' : momPct >= 0 ? 'var(--teal)' : 'var(--red-hover)';
+  const metaColor  = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red-hover)';
+  const gaugeColor = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red)';
+  const pesoStr    = peso >= 1000 ? (peso/1000).toFixed(1).replace('.',',') + ' kt' : Math.round(peso).toLocaleString('pt-BR') + ' t';
+  const pesoBlock  = peso > 0 ? `<div class="perf-ind"><div class="perf-ind-label">Volume Peso</div><div class="perf-ind-value" style="color:var(--text-dim)">${pesoStr}</div><div class="perf-ind-sub">toneladas</div></div>` : '';
+  strip.innerHTML = `
+    <div class="perf-section">
+      <div class="perf-section-title" style="color:var(--red)">Financeiro</div>
+      <div class="perf-metrics-row">
+        <div class="perf-ind">
+          <div class="perf-ind-label">% da Meta</div>
+          <div class="perf-ind-value" style="color:${metaColor}">${metaPct.toFixed(1).replace('.',',')}%</div>
+          <div class="perf-gauge"><div class="perf-gauge-fill" style="width:${Math.min(metaPct,100).toFixed(1)}%;background:${gaugeColor}"></div></div>
+          <div class="perf-ind-sub">de ${fmtShort(DATA.meta)} meta</div>
+        </div>
+        <div class="perf-ind">
+          <div class="perf-ind-label">Fat / Cliente</div>
+          <div class="perf-ind-value" style="color:var(--amber)">${fmtShort(fatCli)}</div>
+          <div class="perf-ind-sub">${cli.toLocaleString('pt-BR')} clientes ativos</div>
+        </div>
+        <div class="perf-ind">
+          <div class="perf-ind-label">Var. MoM</div>
+          <div class="perf-ind-value" style="color:${momColor}">${momStr}</div>
+          <div class="perf-ind-sub">vs mês anterior</div>
+        </div>
+      </div>
+    </div>
+    <div class="perf-section">
+      <div class="perf-section-title" style="color:var(--blue)">Volumetria</div>
+      <div class="perf-metrics-row">
+        <div class="perf-ind">
+          <div class="perf-ind-label">Total NFs</div>
+          <div class="perf-ind-value" style="color:var(--blue)">${nfs.toLocaleString('pt-BR')}</div>
+          <div class="perf-ind-sub">${ms.length} ${ms.length===1?'mês':'meses'}</div>
+        </div>
+        <div class="perf-ind">
+          <div class="perf-ind-label">NF / Dia útil</div>
+          <div class="perf-ind-value" style="color:var(--teal)">${nfDia.toFixed(1).replace('.',',')}</div>
+          <div class="perf-ind-sub">~22 dias/mês</div>
+        </div>
+        <div class="perf-ind">
+          <div class="perf-ind-label">NF / Cliente</div>
+          <div class="perf-ind-value" style="color:var(--text)">${cli > 0 ? nfCli.toFixed(1).replace('.',',') : '—'}</div>
+          <div class="perf-ind-sub">concentração</div>
+        </div>
+        ${pesoBlock}
+      </div>
+    </div>`;
+}
+
+// ─── VIEW SWITCHER (sidebar nav) ──────────────────────────────
+function setView(viewName, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const content = document.querySelector('.content');
+  const scrollTargets = {
+    relatorios:  null,
+    vendedores:  '.table-wrap',
+    produtos:    '#grupo-bars',
+    mercados:    '#chart-donut',
+    indicadores: '#perf-strip',
+    config:      null
+  };
+  if (viewName === 'relatorios') { content.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  if (viewName === 'config')     { showToast('Configurações em desenvolvimento.', 'info'); return; }
+  const sel = scrollTargets[viewName];
+  if (sel) {
+    const target = document.querySelector(sel);
+    if (target) {
+      const contentRect = content.getBoundingClientRect();
+      const targetRect  = target.getBoundingClientRect();
+      content.scrollTo({ top: targetRect.top - contentRect.top + content.scrollTop - 16, behavior: 'smooth' });
+      target.classList.remove('section-highlight');
+      void target.offsetWidth;
+      target.classList.add('section-highlight');
+      setTimeout(() => target.classList.remove('section-highlight'), 1400);
+    }
+  }
 }
 
 // ─── GLOBAL REFRESH ───────────────────────────────────────────
@@ -1197,6 +1371,7 @@ function refreshAll() {
   updateKPIs();
   updateMeta();
   buildHeatmap();
+  buildPerfIndicators();
   buildDonut();
   buildGrupos();
   buildPaises();
@@ -1353,7 +1528,8 @@ function processRows(rows) {
       mercado:     String(r[COL.mercado]||'').toUpperCase(),
       valor,
       produto:     String(r[COL.produto]||''),
-      subGrupo:    String(r[COL.subGrupo]||'OUTROS')
+      subGrupo:    String(r[COL.subGrupo]||'OUTROS'),
+      peso:        typeof r[COL.peso] === 'number' ? r[COL.peso] : (parseFloat(String(r[COL.peso]||'').replace(',','.')) || 0)
     });
     return acc;
   }, []);
@@ -1366,9 +1542,10 @@ function computeAggregations(records) {
   const setAll  = () => { const o={}; allMK.forEach(mk=>o[mk]=new Set()); return o; };
 
   // Monthly totals
-  const monthly    = zeroAll();
-  const monthlyNfs = zeroAll();
-  const monthlyCli = zeroAll();
+  const monthly     = zeroAll();
+  const monthlyNfs  = zeroAll();
+  const monthlyCli  = zeroAll();
+  const monthlyPeso = zeroAll();
   const nfSets  = setAll();
   const cliSets = setAll();
 
@@ -1397,7 +1574,8 @@ function computeAggregations(records) {
     presentMonths.add(r.mes);
     if (r.year) presentYears.add(r.year);
 
-    monthly[mk]  += r.valor;
+    monthly[mk]      += r.valor;
+    monthlyPeso[mk]  += (r.peso || 0);
     if (r.nf)      nfSets[mk].add(r.nf);
     if (r.cliente) cliSets[mk].add(r.cliente);
 
@@ -1488,19 +1666,20 @@ function computeAggregations(records) {
       return { name: name.length > 16 ? name.slice(0,14)+'…' : name, value, flag: flagFor(name) };
     });
 
-  return { monthly, monthlyNfs, monthlyCli, mercadoMes, gruposMes, vendedores, heatmap, paises, availMonths, availYears };
+  return { monthly, monthlyNfs, monthlyCli, monthlyPeso, mercadoMes, gruposMes, vendedores, heatmap, paises, availMonths, availYears };
 }
 
 // ─── APPLY NEW DATA TO DASHBOARD ─────────────────────────────
 function applyNewData(agg, totalRecords) {
-  DATA.monthly    = agg.monthly;
-  DATA.monthlyNfs = agg.monthlyNfs;
-  DATA.monthlyCli = agg.monthlyCli;
-  DATA.mercadoMes = agg.mercadoMes;
-  DATA.gruposMes  = agg.gruposMes;
-  DATA.vendedores = agg.vendedores;
-  DATA.heatmap    = agg.heatmap;
-  DATA.paises     = agg.paises;
+  DATA.monthly     = agg.monthly;
+  DATA.monthlyNfs  = agg.monthlyNfs;
+  DATA.monthlyCli  = agg.monthlyCli;
+  DATA.monthlyPeso = agg.monthlyPeso;
+  DATA.mercadoMes  = agg.mercadoMes;
+  DATA.gruposMes   = agg.gruposMes;
+  DATA.vendedores  = agg.vendedores;
+  DATA.heatmap     = agg.heatmap;
+  DATA.paises      = agg.paises;
 
   // Atualiza meses e anos disponíveis dinamicamente
   if (agg.availMonths && agg.availMonths.length > 0) {
