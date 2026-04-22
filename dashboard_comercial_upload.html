@@ -166,26 +166,25 @@ body {
 .select-filter:hover { border-color: var(--red); }
 .select-filter:focus { outline: none; border-color: var(--red); }
 
+
 /* ─── META BAR ─────────────────────────────────────────────── */
 .meta-bar-wrap {
   padding: 12px 24px; border-bottom: 1px solid var(--border);
   background: var(--bg); flex-shrink: 0;
   display: flex; align-items: center; gap: 14px;
 }
-
 .meta-label { font-size: 12px; color: var(--text-dim); font-weight: 500; white-space: nowrap; }
-
 .meta-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-
 .meta-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, #c41230, #e8193f);
   border-radius: 3px; transition: width 0.6s ease;
   box-shadow: 0 0 8px rgba(196,18,48,0.5);
 }
-
+.meta-bar-fill.over { background: linear-gradient(90deg, #0d9488, #14b8a6); box-shadow: 0 0 8px rgba(13,148,136,0.5); }
 .meta-value { font-size: 12px; font-weight: 600; white-space: nowrap; }
 .meta-pct { font-size: 12px; color: var(--red-hover); font-weight: 700; margin-left: 2px; }
+.meta-pct.over { color: var(--teal); }
 
 /* ─── CONTENT ───────────────────────────────────────────────── */
 .content {
@@ -583,12 +582,12 @@ td.td-num { font-family: 'Fira Code', monospace; font-size: 12px; }
 
   <!-- META BAR -->
   <div class="meta-bar-wrap">
-    <span class="meta-label" id="meta-label">Faturamento YTD 2026</span>
+    <span class="meta-label" id="meta-label">Meta 2026</span>
     <div class="meta-bar-track">
-      <div class="meta-bar-fill" id="meta-fill" style="width:80.5%"></div>
+      <div class="meta-bar-fill" id="meta-fill" style="width:0%"></div>
     </div>
-    <span class="meta-value" id="meta-val">R$ <b>96,6M</b> / R$ 120M meta</span>
-    <span class="meta-pct" id="meta-pct">(80,5%)</span>
+    <span class="meta-value" id="meta-val">—</span>
+    <span class="meta-pct" id="meta-pct"></span>
   </div>
 
   <!-- SCROLLABLE CONTENT -->
@@ -786,8 +785,6 @@ const DATA = {
   monthlyNfs: { jan: 151, fev: 172, mar: 73 },
   monthlyCli: { jan: 84, fev: 73, mar: 52 },
   monthlyPeso: { jan: 5260, fev: 4510, mar: 2295 },
-  meta: 120000000,
-
   mercadoMes: {
     exterior: { jan: 32691787, fev: 25995368, mar: 12830988 },
     interno:  { jan:  9437642, fev: 10091098, mar:  5521709 }
@@ -838,6 +835,34 @@ const DATA = {
     { name: 'Malásia',     value:  1743315, flag: '🇲🇾' }
   ]
 };
+
+// ─── TABELA DE METAS 2026 (Interno + Exterior por mês) ────────
+const META = {
+  year: 2026,
+  interno: {
+    jan:  9153241.27, fev: 10632385.82, mar: 11572760.64,
+    abr: 13750681.93, mai: 14613712.02, jun: 15655286.93,
+    jul: 17890754.14, ago: 17218884.45, set: 16807384.45,
+    out: 14930347.07, nov: 12973874.92, dez: 11377306.41
+  },
+  exterior: {
+    jan: 23520823.36, fev: 26663815.57, mar: 27763523.36,
+    abr: 30736631.14, mai: 35144631.14, jun: 38230231.14,
+    jul: 39196773.36, ago: 40519173.36, set: 39417173.36,
+    out: 36416515.57, nov: 29446365.57, dez: 23360107.79
+  }
+};
+
+// Retorna o total de meta respeitando filtros de período e mercado
+function getMetaFiltrada() {
+  const ms = activeMonths();
+  if (state.mercado === 'ext') {
+    return ms.reduce((s, mk) => s + (META.exterior[mk] || 0), 0);
+  } else if (state.mercado === 'int') {
+    return ms.reduce((s, mk) => s + (META.interno[mk]  || 0), 0);
+  }
+  return ms.reduce((s, mk) => s + (META.exterior[mk] || 0) + (META.interno[mk] || 0), 0);
+}
 
 // ─── STATE ────────────────────────────────────────────────────
 let state = { period: 'all', mercado: 'all', vendedor: 'all', grupo: 'all', year: 'all' };
@@ -1259,13 +1284,26 @@ function buildDonut() {
 // ─── META BAR ─────────────────────────────────────────────────
 function updateMeta() {
   const { fat } = computeFilteredTotals();
-  const pct = (fat / DATA.meta * 100).toFixed(1);
-  document.getElementById('meta-fill').style.width = Math.min(+pct, 100) + '%';
-  const lab = state.period === 'all' ? 'Faturamento YTD ' + new Date().getFullYear()
-    : 'Faturamento ' + (MONTH_LABELS[MONTHS.indexOf(state.period)] || state.period.toUpperCase());
-  document.getElementById('meta-label').textContent = lab;
-  document.getElementById('meta-val').innerHTML = `R$ <b>${fmtShort(fat)}</b> / R$ ${fmtShort(DATA.meta)} meta`;
-  document.getElementById('meta-pct').textContent = `(${pct.replace('.',',')}%)`;
+  const meta    = getMetaFiltrada();
+  const pct     = meta > 0 ? (fat / meta * 100) : 0;
+  const pctStr  = pct.toFixed(1).replace('.', ',') + '%';
+  const over    = pct >= 100;
+
+  const fill = document.getElementById('meta-fill');
+  fill.style.width = Math.min(pct, 100) + '%';
+  fill.classList.toggle('over', over);
+
+  const ms = activeMonths();
+  const mercLabel = state.mercado === 'ext' ? ' — Exterior' : state.mercado === 'int' ? ' — Interno' : '';
+  const perLabel  = state.period === 'all'
+    ? (MONTH_LABELS.length > 1 ? MONTH_LABELS[0] + '–' + MONTH_LABELS[MONTH_LABELS.length-1] : (MONTH_LABELS[0] || ''))
+    : (MONTH_LABELS[MONTHS.indexOf(state.period)] || state.period.toUpperCase());
+  document.getElementById('meta-label').textContent = 'Meta ' + perLabel + mercLabel;
+  document.getElementById('meta-val').innerHTML = `R$ <b>${fmtShort(fat)}</b> / R$ ${fmtShort(meta)} meta`;
+
+  const pctEl = document.getElementById('meta-pct');
+  pctEl.textContent  = '(' + pctStr + ')';
+  pctEl.className    = 'meta-pct' + (over ? ' over' : '');
 }
 
 // ─── PERF INDICATORS ──────────────────────────────────────────
@@ -1274,7 +1312,10 @@ function buildPerfIndicators() {
   if (!strip) return;
   const ms                       = activeMonths();
   const { fat, nfs, cli, peso }  = computeFilteredTotals();
-  const metaPct = DATA.meta > 0 ? fat / DATA.meta * 100 : 0;
+  const meta       = getMetaFiltrada();
+  const metaPct    = meta > 0 ? fat / meta * 100 : 0;
+  const metaColor  = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red-hover)';
+  const gaugeColor = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red)';
   const fatCli  = cli > 0 ? fat / cli : 0;
   const nfDia   = ms.length > 0 ? nfs / (ms.length * 22) : 0;
   const nfCli   = cli > 0 ? nfs / cli : 0;
@@ -1286,8 +1327,6 @@ function buildPerfIndicators() {
   }
   const momStr   = momPct !== null ? (momPct >= 0 ? '+' : '') + momPct.toFixed(1).replace('.',',') + '%' : '—';
   const momColor = momPct === null ? 'var(--text-dim)' : momPct >= 0 ? 'var(--teal)' : 'var(--red-hover)';
-  const metaColor  = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red-hover)';
-  const gaugeColor = metaPct >= 100 ? 'var(--teal)' : metaPct >= 70 ? 'var(--amber)' : 'var(--red)';
   const pesoStr    = peso >= 1000 ? (peso/1000).toFixed(1).replace('.',',') + ' kt' : Math.round(peso).toLocaleString('pt-BR') + ' t';
   const pesoBlock  = peso > 0 ? `<div class="perf-ind"><div class="perf-ind-label">Volume Peso</div><div class="perf-ind-value" style="color:var(--text-dim)">${pesoStr}</div><div class="perf-ind-sub">toneladas</div></div>` : '';
   strip.innerHTML = `
@@ -1298,7 +1337,12 @@ function buildPerfIndicators() {
           <div class="perf-ind-label">% da Meta</div>
           <div class="perf-ind-value" style="color:${metaColor}">${metaPct.toFixed(1).replace('.',',')}%</div>
           <div class="perf-gauge"><div class="perf-gauge-fill" style="width:${Math.min(metaPct,100).toFixed(1)}%;background:${gaugeColor}"></div></div>
-          <div class="perf-ind-sub">de ${fmtShort(DATA.meta)} meta</div>
+          <div class="perf-ind-sub">de ${fmtShort(meta)} meta</div>
+        </div>
+        <div class="perf-ind">
+          <div class="perf-ind-label">Gap Absoluto</div>
+          <div class="perf-ind-value" style="color:${metaPct>=100?'var(--teal)':'var(--red-hover)'}">${metaPct>=100?'+':''}${fmtShort(fat-meta)}</div>
+          <div class="perf-ind-sub">${metaPct>=100?'acima da meta':'abaixo da meta'}</div>
         </div>
         <div class="perf-ind">
           <div class="perf-ind-label">Fat / Cliente</div>
@@ -1693,10 +1737,6 @@ function applyNewData(agg, totalRecords) {
     if (state.period !== 'all' && !MONTHS.includes(state.period)) state.period = 'all';
     updatePeriodButtons();
   }
-
-  // Recompute total meta KPI
-  const totalFat = MONTHS.reduce((s,mk) => s + (agg.monthly[mk]||0), 0);
-  DATA.meta = Math.ceil(totalFat / 0.80 / 1e6) * 1e6;
 
   // Atualiza select de Vendedor com valores reais
   const selVen = document.querySelector('select.select-filter[onchange="setVendedor(this.value)"]');
